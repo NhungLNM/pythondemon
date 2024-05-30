@@ -12,7 +12,12 @@ import cartopy.feature as cfeature
 import plotly.express as px
 athlete_events = pd.read_excel('athlete_events.xlsx')
 
+st.balloons()
+st.markdown("# Data Evaluation App")
 
+st.write("We are so glad to see you here. ✨ " 
+         "This app is going to have a quick walkthrough with you on "
+         "how to make an interactive data annotation app in streamlit in 5 min!")
 # PLOT 1
 
 selected_sports = ["Athletics", "Badminton", "Boxing", "Cycling", "Gymnastics", "Swimming"]
