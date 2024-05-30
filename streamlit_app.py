@@ -81,50 +81,46 @@ fig = px.pie(
 
 st.plotly_chart(fig)
 
+# PLOT 6
 
-# PLOT 10
 
-world_map = go.Figure(go.Choropleth())
+filtered_dat = athlete_events[athlete_events['Year'] >= 1990]
+filtered_dat = filtered_dat[['Year', 'Season', 'Sport']].drop_duplicates()
 
-east_asian_countries = [
-    "China", "Japan", "South Korea", "North Korea", "Taiwan", "Hong Kong", "Mongolia", "Macau", "Vietnam", 
-    "Laos", "Cambodia", "Thailand", "Myanmar", "Malaysia", "Singapore", "Brunei", "Philippines", "Indonesia", 
-    "Timor-Leste"]
+sports_count = filtered_dat.groupby(['Year', 'Season']).size().unstack(fill_value=0)
+fig, axs = plt.subplots(2, 1, figsize=(12, 12))
 
-iso_codes = {
-    "China": "CHN", "Japan": "JPN", "South Korea": "KOR", "North Korea": "PRK", "Taiwan": "TWN", 
-    "Hong Kong": "HKG", "Mongolia": "MNG", "Macau": "MAC", "Vietnam": "VNM", "Laos": "LAO", 
-    "Cambodia": "KHM", "Thailand": "THA", "Myanmar": "MMR", "Malaysia": "MYS", "Singapore": "SGP","Brunei": "BRN", "Philippines": "PHL", "Indonesia": "IDN", "Timor-Leste": "TLS"
-}
+years = sports_count.index
+summer_counts = sports_count['Summer']
+bar_width = 0.35
+x = np.arange(len(years))
 
-athlete_counts = athlete_events[
-    (athlete_events['Team'].isin(east_asian_countries)) & (athlete_events['Year'].between(1990, 2016))
-].groupby('Team')['ID'].nunique().reset_index(name='athlete_count')
+axs[0].bar(x, summer_counts, width=bar_width, color='#FFA500', alpha=0.7, label='Summer')
+axs[0].set_xlabel('Year')
+axs[0].set_ylabel('Number of Sports')
+axs[0].set_title('Number of Sports Participated in Summer Season (1990-2022)')
+axs[0].set_xticks(x)
+axs[0].set_xticklabels(years)
+axs[0].legend()
+axs[0].grid(True, linestyle='-', alpha=0.2)
 
-athlete_counts['iso_code'] = athlete_counts['Team'].map(iso_codes)
+for i, summer_count in enumerate(summer_counts):
+  axs[0].text(x[i], summer_count, str(summer_count), ha='center', va='bottom', fontsize=12)
 
-world_map.add_trace(go.Choropleth(
-    locations=athlete_counts['iso_code'],
-    z=athlete_counts['athlete_count'],
-    text=athlete_counts['Team'],
-    colorscale='Blues',
-    marker_line_color='white',
-    colorbar_title='Athlete Count',
-))
+winter_counts = sports_count['Winter']
 
-world_map.update_layout(
-    title='Number of Athletes in Southeast Asian and East Asian Countries (1990-2016)',
-    geo=dict(
-        showcoastlines=True,
-        showcountries=True,
-        countrycolor='white',
-        coastlinecolor='black'
-    ),
-    hoverlabel=dict(
-        bgcolor="white",
-        font_size=16,
-        font_family="Arial"
-    )
-)
+axs[1].bar(x, winter_counts, width=bar_width, color='#4682B4', alpha=0.7, label='Winter')
+axs[1].set_xlabel('Year')
+axs[1].set_ylabel('Number of Sports')
+axs[1].set_title('Number of Sports Participated in Winter Season (1990-2022)')
+axs[1].set_xticks(x)
+axs[1].set_xticklabels(years)
+axs[1].legend()
+axs[1].grid(True, linestyle='-', alpha=0.2)
 
-st.plotly_chart(world_map)
+for i, winter_count in enumerate(winter_counts):
+  axs[1].text(x[i], winter_count, str(winter_count), ha='center', va='bottom', fontsize=12)
+
+plt.tight_layout()
+
+st.pyplot(fig)
