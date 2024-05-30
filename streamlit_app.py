@@ -60,44 +60,27 @@ fig.update_layout(
 )
 
 st.plotly_chart(fig)
-# PLOT 3
+# PLOT 4
 
-filtered_data = athlete_events[(athlete_events['Year'] >= 1990) & (athlete_events['Year'] <= 2016)]
-filtered_data = filtered_data.dropna(subset=['Sex'])
 
-yearly_gender_counts = filtered_data.groupby(['Year', 'Sex']).size().unstack(fill_value=0)
+b_data = athlete_events[athlete_events['Sport'].isin(["Boxing", "Football", "Judo", "Swimming", "Taekwondo"])]
 
-yearly_gender_counts['Total'] = yearly_gender_counts['M'] + yearly_gender_counts['F']
-yearly_gender_counts.sort_values(by='Year', inplace=True)
+athlete_counts = b_data['Sport'].value_counts().reset_index()
+athlete_counts.columns = ['Sport', 'Count']
 
-fig = go.Figure()
+color_sequence = ["#1f77b4", "#ff7f0e", "#2ca02c", "#d62728", "#9467bd"]
 
-fig.add_trace(go.Bar(
-    x=yearly_gender_counts.index,
-    y=yearly_gender_counts['M'],
-    name='Male',
-    marker_color='#FF6666',
-    text=yearly_gender_counts['M'],
-    textposition='auto'
-))
+fig = px.pie(
+    athlete_counts,
+    values='Count',
+    names='Sport',
+    title='The number of athletes participating in the Olympic during 120 Years',
+    hole=0.7,  # To create a donut chart
+    color_discrete_sequence=color_sequence
+)
 
-fig.add_trace(go.Bar(
-    x=yearly_gender_counts.index,
-    y=yearly_gender_counts['F'],
-    name='Female',
-    marker_color='#FF9966',
-    text=yearly_gender_counts['F'],
-    textposition='auto'
-))
-fig.update_layout(
-    title='Number of Athletes by Gender (1990-2016)',
-    xaxis_title='Year',
-    yaxis_title='Number of Athletes',
-    barmode='stack',
-    legend_title_text='Sex',
-    plot_bgcolor='rgba(0,0,0,0)',
-    xaxis=dict(tickmode='linear'),
-    yaxis=dict(gridcolor='rgba(128,128,128,0.1)'),
+st.plotly_chart(fig)
+
     showlegend=True
 )
 
