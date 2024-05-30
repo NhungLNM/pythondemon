@@ -82,7 +82,7 @@ fig = px.pie(
 st.plotly_chart(fig)
 # PLOT 10
 
-world_map = go.Figure(go.Choropleth())
+world_map = Figure(go.Choropleth())
 
 east_asian_countries = [
     "China", "Japan", "South Korea", "North Korea", "Taiwan", "Hong Kong", "Mongolia", "Macau", "Vietnam", 
