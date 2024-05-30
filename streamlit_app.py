@@ -81,6 +81,6 @@ fig = px.pie(
 
 st.plotly_chart(fig)
 
-showlegend=True)
+showlegend=True
 
 st.plotly_chart(fig)
