@@ -80,6 +80,46 @@ fig = px.pie(
 )
 
 st.plotly_chart(fig)
+
+# PLOT 8
+
+
+filtered_dat = athlete_events[(athlete_events['Year'] >= 1990) & (athlete_events['Year'] <= 2016)]
+
+summary_dat = filtered_dat.groupby(['Year', 'Season']).size().reset_index(name='total_athletes')
+
+fig = go.Figure()
+
+for season, color in zip(['Summer', 'Winter'], ['darkorange', 'steelblue']):
+    data = summary_dat[summary_dat['Season'] == season]
+    fig.add_trace(go.Scatter(
+        x=data['Year'],
+        y=data['total_athletes'],
+        mode='lines+markers',
+        name=season,
+        line=dict(color=color),
+        marker=dict(color=color, size=8),
+        text=data['total_athletes'],
+        hovertemplate='<b>%{x}</b><br><br>Total Athletes: %{y}',
+    ))
+
+fig.update_layout(
+    title='Total Athletes in Summer and Winter (1990-2016)',
+    xaxis_title='Year',
+    yaxis_title='Total Athletes',
+    legend_title='Season',
+    legend=dict(
+        yanchor="top",
+        y=0.99,
+        xanchor="right",
+        x=0.99
+    ),
+    showlegend=True,
+    hovermode='x'
+)
+
+st.plotly_chart(fig)
+
 # PLOT 10
 
 world_map = go.Figure(go.Choropleth())
