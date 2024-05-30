@@ -10,7 +10,7 @@ from matplotlib.colors import LinearSegmentedColormap
 import cartopy.crs as ccrs
 import cartopy.feature as cfeature
 import plotly.express as px
-athlete_events = pd.read_excel(r'Athlete_events.xlsx')
+athlete_events = pd.read_excel(r'athlete_events.xlsx')
 
 
 # PLOT 1
